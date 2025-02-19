@@ -1,0 +1,31 @@
+import express from "express"
+import cors from "cors"
+import cookieparser from "cookie-parser"
+import dotenv from "dotenv"
+
+const app = express()
+
+//applying middle ware
+
+app.use(cors())  // so that we can fetch the api from anywhere
+
+app.use(express.json({ limit: "16kb" }));    // it parse json data to make them available in req.body
+
+app.use(express.urlencoded({ extended: true })) // it parse form or url-encoded data to make them availabel in req.body
+
+app.use(cookieparser())  // to read and write cookies
+
+app.use(express.static("public")); // it serve the static files from public so that we can use them
+
+
+
+import userRouter from "./routes/user.route.js"
+app.use("/api/v1/users", userRouter)
+
+import blogrouter from "./routes/blog.route.js"
+app.use("/api/v1/blog", blogrouter)
+
+
+export default app
+
+
