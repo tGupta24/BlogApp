@@ -17,7 +17,7 @@ const userSchema = new Schema(
         email: {
             type: String,
             required: true,
-            unique: true,// no two user have same email 
+
             // validate: [  // validation for user
             //     {
             //         validator: (value) => (validator.isEmail(value.trim())),
@@ -28,7 +28,7 @@ const userSchema = new Schema(
         phoneNumber: {
             type: String,
             required: true,
-            unique: true
+
         },
         avatar: {
             type: String,

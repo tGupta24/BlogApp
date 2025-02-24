@@ -27,44 +27,33 @@ const generateAccessAndRefereshTokens = async (userId) => {
 }
 
 const register = asyncHandler(async (req, res) => {
-    //1. Take all input from req.body and check all are filled or not
+    // 1. Get input fields from req.body
     const { name, email, phoneNumber, education, role, password } = req.body;
-    console.log("hi");
+
     if (!name || !email || !phoneNumber || !education || !role || !password) {
-        throw new ApiError(401, "All fields are required");
+        throw new ApiError(400, "All fields are required");
     }
 
-
-
-    //2. if User already exist
-    const existedUser = await User.findOne({ email }) //since email is unique
+    // 2. Check if the user already exists
+    const existedUser = await User.findOne({ email });
     if (existedUser) {
-        throw new ApiError(401, "user already exist with email");
+        throw new ApiError(400, "User already exists with this email");
     }
 
-
-    //3. Take avatar from req.files avatar nam se array hoga
-    if (!req.files) {
-        throw new ApiError(400, "avatar is not uploaded");
-    }
-    const avatarLocalPath = req.files?.avatar[0].path;
-
-    console.log(req.files);
-    if (!avatarLocalPath) {
-        throw new ApiError(402, "avatar file is required");
+    // 3. Validate file upload
+    if (!req.file || Object.keys(req.files).length === 0) {   // Object.keys(req.files).length === 0;
+        throw new ApiError(400, "Avatar is required");
     }
 
+    const avatarLocalPath = req.file.path;
 
-    //4 uploadOnCloudinary
+    // 4. Upload image to Cloudinary (if needed)
     const avatar = await uploadOnCloudinary(avatarLocalPath);
-
     if (!avatar) {
-        throw new ApiError(402, "avatar file is required");
+        throw new ApiError(500, "Error uploading avatar");
     }
-    console.log("uploaded")
 
-
-    //5. create new User
+    // 5. Create the user
     const user = await User.create({
         name,
         email,
@@ -72,27 +61,12 @@ const register = asyncHandler(async (req, res) => {
         avatar: avatar.url,
         education,
         role,
-        password   // password hashed before save see in user.model.js
+        password
+    });
 
-    })
-
-
-    //check created or not by finding again 
-    const createdUser = await User.findById(user._id).select(
-        "-password"
-    )
-    if (!createdUser) {
-        throw new ApiError(500, "something went wrong user not created");
-    }
-    console.log(" user created")
-
-
-    //send response
-    return res.status(201).json(
-        new ApiResponse(200, createdUser, "User registered Successfully")
-    )
-
-})
+    // 6. Send response
+    return res.status(201).json(new ApiResponse(201, user, "User registered successfully"));
+});
 
 const login = asyncHandler(async (req, res) => {
     // take data from  req.body
@@ -112,13 +86,13 @@ const login = asyncHandler(async (req, res) => {
     )
 
     if (!existedUser) {
-        throw new ApiError(403, "user is  not registered");
+        throw new ApiError(403, "user is not registered");
     }
 
     const isPasswordCorrect = await existedUser.isPasswordCorrect(password);
 
     if (!isPasswordCorrect) {
-        throw new ApiError(401, "entered password is incorrect");
+        throw new ApiError(401, "username or password is incorrect");
     }
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(existedUser._id);
@@ -190,6 +164,9 @@ const getAdmins = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(200, admins, "all admins are fetched succesfully")
         )
+})
+
+const resetPassword = asyncHandler(async (req, res) => {
 })
 
 export { register, login, logout, getCurrentUserProfile, getAdmins }

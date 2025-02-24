@@ -26,6 +26,14 @@ import blogrouter from "./routes/blog.route.js"
 app.use("/api/v1/blog", blogrouter)
 
 
+
+app.use((err, req, res, next) => {
+    res.status(err.statusCode || 500).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+    });
+});
+
 export default app
 
 

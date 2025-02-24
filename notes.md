@@ -17,3 +17,23 @@
 
 
 
+## how register works 
+
+1. first user send a req at api
+2. using react hook form i will take all data from user 
+3. since we have to send the files so we have to use formData make a object of formData from FormData()  class and then append all data to that 
+4. now using axios.post(
+    "url",
+    formData,
+    {header:
+       {
+        content-type
+       }
+    }
+    )
+
+5. it will go to server 
+
+
+
+
