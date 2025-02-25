@@ -1,7 +1,8 @@
 import React from "react";
-import FilterSlider from "../Blog/FilterSlider";
-import Card from "../Blog/Cards";
+import FilterSlider from "./Blog/FilterSlider";
+import Cards from "./Blog/Cards";
 import { useAuth } from "../contextApi/AuthProvider";
+import CardForBlog from "./BlogItems/CardForBlog";
 
 export default function Blog() {
     const { blogs } = useAuth();
@@ -10,19 +11,17 @@ export default function Blog() {
         <div className="container mx-auto p-4">
             {/* Filter Section */}
             <FilterSlider />
-
+            {console.log(blogs)
+            }
             {/* Blog Cards Section */}
             <div className="mt-6 p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 w-[75%]">
                     {blogs.length > 0 ? (
                         blogs.map((blog) => (
-                            <Card
+                            <CardForBlog
                                 key={blog._id}
-                                blogImg={blog.blogImage}
-                                description={blog.content} // Using 'content' for description
-                                authorImg={blog.owner.avatar}
-                                authorName={blog.owner.name}
-                                likeCount={0} // Add likes if available in the future
+                                blog={blog}
+
                             />
                         ))
                     ) : (

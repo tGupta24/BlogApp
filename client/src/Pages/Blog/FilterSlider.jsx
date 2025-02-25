@@ -76,19 +76,19 @@ function FilterSlider() {
 
         <div className="p-2">
 
-            <div className="lg:flex mt-10 justify-around border-2">
-                <div className="border-2">
+            <div className="lg:flex mt-10 justify-around ">
+                <div className="">
                     <Select
                         value={selectedValue}
                         onChange={(e) => setSelectedValue(e.target.value)}
                         size="small" // Makes it compact
-                        className="w-30 bg-white border font-mona border-gray-300 rounded-md shadow-sm transition duration-200"
+                        className="w-30 bg-white  font-mona border-gray-300 rounded-md shadow-sm transition duration-200"
                     >
                         <MenuItem value="popular" >Popular</MenuItem>
                         <MenuItem value="new">New</MenuItem>
                     </Select>
                 </div>
-                <div className="w-full max-w-4xl relative m-auto lg:m-0 border-2">
+                <div className="w-full max-w-4xl relative m-auto lg:m-0 ">
                     <Slider {...settings}>
                         {[...Array(9)].map((_, index) => (
                             <div key={index} className="">

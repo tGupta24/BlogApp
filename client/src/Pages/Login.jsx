@@ -19,7 +19,9 @@ function Login() {
         console.log(data);
 
         try {
-            const res = await axios.post(`${BASE_URL}/users/login`, data)
+            const res = await axios.post(`${BASE_URL}/users/login`, data, {
+                withCredentials: true  // to accept token  
+            })
             if (res.status >= 200 && res.status < 300) {
                 toast.success("you are logged in");
             }
@@ -27,6 +29,7 @@ function Login() {
             toast.error(error.response?.data?.message || "Something went wrong!");
             throw error.response.data
         }
+        reset()
     };
 
     return (

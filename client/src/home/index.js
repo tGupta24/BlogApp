@@ -1,11 +1,11 @@
 import Hero from "./Hero"
-import Devotional from "./Devotional"
-import HomeCreater from "./HomeCreater"
+import Devotional from "./PopularCategory"
+import PopularCreater from "./PopularCreater"
 import Trending from "./Trending"
 
 export {
     Hero,
     Devotional,
-    HomeCreater,
+    PopularCreater,
     Trending
 }

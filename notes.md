@@ -32,7 +32,24 @@
     }
     )
 
-5. it will go to server 
+5. it will hit the  server all middle ware works now multer add a req.file / files depend on single/fields 
+6. now controller  main
+7. we apply a async Handler here whenever in controller any error occured it handles by async Handler and async Handler gives it to next() middleware which is
+8. we will write this middleware after route in app.js
+
+9. app.use((err, req, res, next) => {
+    res.status(err.statusCode || 500).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+    });
+}); now what happens is error will be sent to frontend with the messeage that will we write in controller using this middleware
+
+## Login works 
+1. same but just we have to write (cridentialsTrue) in axios req to accept token now token is saved in your browser
+2. now whenever you want to hit the secured route you have to send that token using cridential true
+
+
+
 
 
 

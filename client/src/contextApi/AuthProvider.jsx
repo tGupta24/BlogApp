@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
         const fetchBlogs = async () => {
             try {
                 const res = await axios.get(`${BASE_URL}/blog/getallBlogs`);
+
                 setBlogs(res.data.data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);

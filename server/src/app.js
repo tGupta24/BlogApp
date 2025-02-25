@@ -7,7 +7,8 @@ const app = express()
 
 //applying middle ware
 
-app.use(cors())  // so that we can fetch the api from anywhere
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// so that we can fetch the api from anywhere
 
 app.use(express.json({ limit: "16kb" }));    // it parse json data to make them available in req.body
 
