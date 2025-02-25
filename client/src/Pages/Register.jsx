@@ -7,6 +7,7 @@ import { FaEye, FaEyeSlash, FaUpload } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { Popup } from "../ToastContainer/Popup";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -15,6 +16,7 @@ function Register() {
     const [showPass, setShowPass] = useState(false);
     const { register, handleSubmit, reset } = useForm();
     const [photo, setPhoto] = useState("")
+    const navigate = useNavigate();
 
     const changeFileHandler = (e) => {
         setPhoto(e.target.files[0]);
@@ -43,7 +45,8 @@ function Register() {
             console.log(res)
             console.log(res.status)
             if (res.status >= 200 && res.status < 300) {
-                toast.success("you are registered successFully")
+                toast.success("you are registered successFully");
+                navigate("/login")
             }
             else {
                 toast.error("you are not register somethiing went wrong")

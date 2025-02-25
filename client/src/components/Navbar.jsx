@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, Button, Typography, Box } from "@mui/material";
 import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useAuth } from "../contextApi/AuthProvider";
 
 // Custom Breakpoints
 const theme = createTheme({
@@ -19,6 +20,7 @@ const theme = createTheme({
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const { profile, isAuthenicated, logout } = useAuth();
 
     return (
         <ThemeProvider theme={theme}>
@@ -59,8 +61,12 @@ export default function Navbar() {
                             <NavLink to="/register" style={{ textDecoration: "none" }}>
                                 <Button sx={{ text: "white", ":hover": { bgcolor: "#9ca3af" } }}>Sign In</Button>
                             </NavLink>
-                            <NavLink to="/login" style={{ textDecoration: "none" }}>
-                                <Button sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>
+                            <NavLink to={!isAuthenicated ? ("/login") : null} style={{ textDecoration: "none" }}>
+                                {isAuthenicated ? (
+                                    <Button
+                                        onClick={logout}
+                                        sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>logout</Button>
+                                ) : (<Button sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>login</Button>)}
                             </NavLink>
                         </List>
 
@@ -98,7 +104,7 @@ export default function Navbar() {
                     </ListItem>
                     <ListItem sx={{ justifyContent: "center" }}>
                         <NavLink to="/login" style={{ textDecoration: "none", width: "80%" }} onClick={() => setIsOpen(false)}>
-                            <Button fullWidth sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>
+                            {isAuthenicated ? (<Button fullWidth sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>) : (<Button fullWidth sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>)}
                         </NavLink>
                     </ListItem>
                 </List>

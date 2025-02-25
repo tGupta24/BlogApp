@@ -1,47 +1,43 @@
 import axios from "axios";
 import React, { use, useEffect, useState } from "react"
-import PopularCreaterCard from "../home/PopularCreater/PopularCreaterCard";
+import { useAuth } from "../contextApi/AuthProvider";
+import PopularCreatorCard from "../home/PopularCreater/PopularCreaterCard";
+
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-function Creater() {
-    const [admins, setAdmins] = useState([]);
+export default function PopularCreater() {
 
-    useEffect(() => {
-        const fetchAdmins = async () => {
-            try {
 
-                const res = await axios.get(`${BASE_URL}/users/all-Admins`, {
-                    withCredentials: true,      // using this we can verify our  token
-                });
-                console.log(res.data.data)
-                setAdmins(res.data.data)
-
-            } catch (error) {
-                console.log(error.response?.data?.message)
-                throw error
-            }
-        }
-        fetchAdmins()
-    }, []);
+    const { isAuthenicated, setIsAuthenticated, admins } = useAuth();
     return (
-        <div className="p-4 m-auto">
+        !isAuthenicated ? (
+            <div>
+                <p style={{ fontSize: "18px", fontWeight: "bold", color: "#333", textAlign: "center", background: "#f8f9fa", padding: "10px", borderRadius: "8px", boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)" }}>
+                    🔐 Login to explore more content!
+                </p>
 
-            <div className="mt-6 ">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 m-auto">
-                    {admins.length > 0 ? (
-                        admins.map((admin) =>
-                            <PopularCreaterCard key={admin._id} authorImg={admin.avatar} authorName={admin.name} />
-                        )
-                    ) : (
-                        <p>"Login to see more...."</p>
-                    )}
-                </div>
+
             </div>
-        </div>
+        ) : (
+
+            <div className="p-4 m-auto">
+                <h2 className="text-xl font-semibold mb-4 ml-9">Popular Creaters</h2 >
+                <div className="mt-6 ">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 m-auto">
+                        {admins.length > 0 ? (
+                            admins.map((admin) =>
+                                <PopularCreatorCard key={admin._id} authorImg={admin.avatar} authorName={admin.name} />
+                            )
+                        ) : (
+                            <p style={{ fontSize: "18px", fontWeight: "bold", color: "#333", textAlign: "center", background: "#f8f9fa", padding: "10px", borderRadius: "8px", boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)" }}>
+                                No admins right Now
+                            </p>
+
+                        )}
+                    </div>
+                </div>
+            </div >
+        )
     );
 
 }
-
-
-
-export default Creater

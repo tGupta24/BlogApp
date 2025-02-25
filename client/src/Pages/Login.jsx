@@ -7,12 +7,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Popup } from "../ToastContainer/Popup";
 import { toast } from "react-toastify";
+import { useAuth } from "../contextApi/AuthProvider";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function Login() {
     const [showPass, setShowPass] = useState(false);
     const { register, handleSubmit, reset } = useForm();
+    const { isAuthenicated, setIsAuthenticated } = useAuth()
+
+
     const navigate = useNavigate();
 
     const onsubmit = async (data) => {
@@ -24,10 +28,13 @@ function Login() {
             })
             if (res.status >= 200 && res.status < 300) {
                 toast.success("you are logged in");
+                setIsAuthenticated(true)
+                navigate("/home")
+
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong!");
-            throw error.response.data
+            throw error.response
         }
         reset()
     };
