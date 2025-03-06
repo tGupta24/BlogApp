@@ -15,7 +15,7 @@ export default function PopularCreatorCard(
             />
             <div>
                 <h2 className="text-lg font-semibold text-center">{authorName}</h2>
-                <p className="text-gray-500 text-center">FollowingCount</p>
+
 
             </div>
         </div>

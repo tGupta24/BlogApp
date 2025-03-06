@@ -38,9 +38,12 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 
 export const userVerification = (...roles) => {  //multiple argument and all argument are placed in array so we can use include method
     return (req, res, next) => {
+        console.log("verifying user for admin role")
+        console.log("role", roles, req.user.role)
         if (!roles.includes(req.user.role)) {
-            return res.status(401).json({
-                status: 401,
+            console.log("You are not allowed to do such tasks")
+            return res.status(405).json({
+                status: 405,
                 message: "You are not allowed to do such tasks",
             });
         }

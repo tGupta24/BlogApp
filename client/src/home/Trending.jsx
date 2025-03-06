@@ -71,7 +71,7 @@ function Trending() {
                     {trendingBlogs.map((blog) => (
                         <Cards
                             key={blog._id}
-                            toForImg="/home"
+                            toForImg={`/singleBlog/${blog._id}`}
                             toForAuthor="/home"
                             blogImg={blog.blogImage}
                             category={blog.category}

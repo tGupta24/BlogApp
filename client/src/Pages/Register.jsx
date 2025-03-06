@@ -32,7 +32,7 @@ function Register() {
             formData.append("email", user.email);
             formData.append("phoneNumber", user.phoneNumber);
             formData.append("password", user.password);
-            formData.append("education", "manit");
+
             formData.append("role", user.role);
             formData.append("avatar", photo);
 

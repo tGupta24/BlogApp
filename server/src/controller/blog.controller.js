@@ -13,16 +13,20 @@ const createBlog = asyncHandler(async (req, res) => {
     if (!title || !content || !category) {
         throw new ApiError(401, "All fields are required");
     }
+    console.log("got all values");
     if (!req.file) {
         throw new ApiError(401, "blog image is required");
     }
+    console.log("got req.file");
     const blogImageLocalPath = req.file?.path;
+    console.log("got blogImagePath");
 
     const blogImage = await uploadOnCloudinary(blogImageLocalPath);
 
     if (!blogImage) {
         throw new ApiError(500, "something went wrong ");
     }
+    console.log("got blogImagePath");
     const owner = req.user
 
 
@@ -89,17 +93,36 @@ const updateBlog = asyncHandler(async (req, res) => {
             new ApiResponse(200, blog, "blog updated")
         )
 })
-
 const getSingleBlog = asyncHandler(async (req, res) => {
     const { id } = req.params
 
-    const blog = Blog.findById(id);
+    const blog = await Blog.findById(id).populate("owner", "name avatar");
+    console.log(blog)
 
     res.status(200)
         .json(
-            200, blog, "blog found successfully"
+            new ApiResponse(200, blog, "get blog")
         )
 })
+
+// const likeBlog = asyncHandler(async (req, res) => {
+//     const { id } = req.params;
+
+//     const blog = await Blog.findByIdAndUpdate(
+//         id,
+//         { $inc: { likes: 1 } },  // Increment likes by 1
+//         { new: true }  // Return updated document
+//     )
+
+//     if (!blog) {
+//         return res.status(404).json(new ApiResponse(404, null, "Blog not found"));
+//     }
+
+//     console.log(blog);
+//     res.status(200).json(new ApiResponse(200, blog, "Blog liked successfully"));
+// });
+
+
 
 
 export { createBlog, deleteBlog, getallBlogs, updateBlog, getSingleBlog }

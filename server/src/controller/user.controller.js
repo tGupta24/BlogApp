@@ -28,9 +28,9 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
 const register = asyncHandler(async (req, res) => {
     // 1. Get input fields from req.body
-    const { name, email, phoneNumber, education, role, password } = req.body;
+    const { name, email, phoneNumber, role, password } = req.body;
 
-    if (!name || !email || !phoneNumber || !education || !role || !password) {
+    if (!name || !email || !phoneNumber || !role || !password) {
         throw new ApiError(400, "All fields are required");
     }
 
@@ -68,7 +68,6 @@ const register = asyncHandler(async (req, res) => {
         email,
         phoneNumber,
         avatar: avatar.url,
-        education,
         role,
         password
     });

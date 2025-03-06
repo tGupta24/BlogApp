@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Popup } from "../ToastContainer/Popup";
+import Toast from "react-hot-toast";
 import { toast } from "react-toastify";
 import { useAuth } from "../contextApi/AuthProvider";
 
@@ -14,7 +15,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 function Login() {
     const [showPass, setShowPass] = useState(false);
     const { register, handleSubmit, reset } = useForm();
-    const { isAuthenicated, setIsAuthenticated } = useAuth()
+    const { isAuthenticated, setIsAuthenticated } = useAuth()
 
 
     const navigate = useNavigate();
@@ -27,9 +28,9 @@ function Login() {
                 withCredentials: true  // to accept token  
             })
             if (res.status >= 200 && res.status < 300) {
-                toast.success("you are logged in");
+                Toast.success("Logged In Successfully");
                 setIsAuthenticated(true)
-                navigate("/home")
+                navigate("/")
 
             }
         } catch (error) {

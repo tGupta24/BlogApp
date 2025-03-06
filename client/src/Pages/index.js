@@ -5,6 +5,7 @@ import Creators from "./Creators"
 import Dashboard from "./Dashboard"
 import Login from "./Login"
 import Register from "./Register"
+import SingleBlog from './SingleBlog'
 
 export {
     About,
@@ -13,6 +14,7 @@ export {
     Creators,
     Dashboard,
     Login,
-    Register
+    Register,
+    SingleBlog
 }
 

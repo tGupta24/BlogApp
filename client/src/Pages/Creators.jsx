@@ -8,13 +8,15 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function PopularCreater() {
 
 
-    const { isAuthenicated, setIsAuthenticated, admins } = useAuth();
+    const { isAuthenticated, setIsAuthenticated, admins } = useAuth();
+
     return (
-        !isAuthenicated ? (
+
+        !isAuthenticated ? (
             <div>
-                <p style={{ fontSize: "18px", fontWeight: "bold", color: "#333", textAlign: "center", background: "#f8f9fa", padding: "10px", borderRadius: "8px", boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)" }}>
+                <div className="h-screen" style={{ fontSize: "18px", fontWeight: "bold", color: "#333", textAlign: "center", background: "#f8f9fa", padding: "10px", borderRadius: "8px", boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)" }}>
                     🔐 Login to explore more content!
-                </p>
+                </div>
 
 
             </div>

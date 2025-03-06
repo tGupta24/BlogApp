@@ -1,6 +1,9 @@
 import React from "react";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../contextApi/AuthProvider";
+import toast from "react-hot-toast";
+
 
 
 export default function Cards({
@@ -18,7 +21,11 @@ export default function Cards({
     const currentTime = new Date();// currect timmming
     const diff = currentTime - uploadTime
     const differenceDays = Math.floor(diff / (1000 * 60 * 60 * 24));// diffrence in days
-
+    const pleaseLogin = (e) => {
+        e.preventDefault(); // Prevents navigation if not logged in
+        toast.error("Please login to view the full blog");
+    };
+    const { isAuthenticated } = useAuth()
 
 
     return (
@@ -26,7 +33,7 @@ export default function Cards({
             {/* Image Section */}
             <div className="relative group">
                 <Link
-                    to={toForImg}
+                    to={isAuthenticated ? (toForImg) : "#"} onClick={!isAuthenticated ? pleaseLogin : undefined}
                 >
                     <img
                         src={blogImg || "/cardimg.jpg"}
@@ -39,10 +46,7 @@ export default function Cards({
                     group-hover:opacity-100 transition-opacity duration-300 flex justify-between items-center px-4"
                 >
                     <span className="text-sm font-medium">{category}</span>
-                    <button className="bg-white p-2 rounded-full flex items-center">
-                        <FaHeart className="text-red-500" />
-                        <span className="text-gray-700 text-sm ml-1">{likeCount}</span>
-                    </button>
+
                 </div>
             </div>
 

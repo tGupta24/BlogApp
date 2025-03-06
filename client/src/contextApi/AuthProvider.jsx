@@ -1,7 +1,7 @@
 import { useStepContext } from "@mui/material";
 import axios from "axios"
 import React, { createContext, use, useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie"
+import toast from "react-hot-toast";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -12,9 +12,11 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     // Taking blogs using fetching
     const [blogs, setBlogs] = useState([]);
-    const [isAuthenicated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [profile, setProfile] = useState(null)
     const [admins, setAdmins] = useState([]);
+
 
 
     useEffect(() => {
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }) => {
                     { withCredentials: true }
                 );
                 setProfile(res.data.data);
+                if (res.data.data.role === "admin") setIsAdmin(true);
                 setIsAuthenticated(true);
 
             } catch (error) {
@@ -43,7 +46,7 @@ export const AuthProvider = ({ children }) => {
         };
         fetchBlogs();
         const fetchAdmins = async () => {
-            if (!isAuthenicated) {
+            if (!isAuthenticated) {
                 setAdmins([])
                 return;
             }
@@ -60,13 +63,18 @@ export const AuthProvider = ({ children }) => {
             }
         }
         fetchAdmins()
-    }, [isAuthenicated]);
+    }, [isAuthenticated]);
 
     const logout = async () => {
         try {
             await axios.post(`${BASE_URL}/users/logout`, {}, { withCredentials: true });
             setIsAuthenticated(false);  // Logout hone ke baad UI turant update hoga
             setProfile(null);
+            setIsAdmin(false)
+            setAdmins([])
+            setBlogs([])
+            toast.success("Logged Out Succesfully")
+
         } catch (error) {
             console.error("Logout failed:", error);
         }
@@ -74,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ blogs, profile, isAuthenicated, setIsAuthenticated, logout, admins }} >  {/* pass all blogs so that we can use them in chidren componets */}
+        <AuthContext.Provider value={{ blogs, profile, isAuthenticated, setIsAuthenticated, logout, admins, isAdmin, setIsAdmin }} >  {/* pass all blogs so that we can use them in chidren componets */}
             {children}
         </ AuthContext.Provider>
     )

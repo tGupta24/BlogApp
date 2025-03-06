@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, Button, Typography, Box } from "@mui/material";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, Button, Typography, Box, Menu, MenuItem } from "@mui/material";
 import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useAuth } from "../contextApi/AuthProvider";
+import { MdSettings } from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { Toaster } from "react-hot-toast";
+
 
 // Custom Breakpoints
 const theme = createTheme({
     breakpoints: {
         values: {
+            end: 0,
             xs: 300,
             sm: 340,
             md: 440,
@@ -20,10 +26,29 @@ const theme = createTheme({
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const { profile, isAuthenicated, logout } = useAuth();
+    const { profile, isAuthenticated, logout, isAdmin, setIsAdmin } = useAuth();
+
+    // Dropdown State
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    // Handle Dropdown Open/Close
+    const handleProfileClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const navigate = useNavigate();
+    const Navigate = () => {
+        navigate("/dashboard/my-profile");
+    };
+
 
     return (
         <ThemeProvider theme={theme}>
+            <Toaster position="top-center" reverseOrder={false} />
             {/* Navbar */}
             <AppBar position="sticky" sx={{ backgroundColor: "#ffffff", color: "black", boxShadow: 0 }}>
                 <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -36,49 +61,100 @@ export default function Navbar() {
                         </Typography>
                     </Box>
 
-                    {/* Middle Links (Hide on Medium Screens) */}
+                    {/* Middle Links */}
                     <List sx={{
-                        display: { xs: "none", sm: "none", md: "none", lg: "flex" },
+                        display: { end: "none", xs: "none", sm: "none", md: "none", lg: "flex" },
                         gap: 1,
-                        flexGrow: 1, // Allows the list to take up space before buttons
-                        justifyContent: "center" // Center align links
+                        flexGrow: 1,
+                        justifyContent: "center"
                     }}>
                         {["Home", "Blogs", "Creators", "About", "Contact"].map((text) => (
                             <NavLink key={text} to={`/${text.toLowerCase()}`} style={{ textDecoration: "none" }}>
-                                <Button sx={{ color: "black", ":hover": { bgcolor: "#e5e7eb" }, textTransform: "none", fontWeight: "bold", fontSize: "16px" }}>{text}</Button>
+                                <Button sx={{ color: "black", ":hover": { bgcolor: "#e5e7eb" }, textTransform: "none", fontWeight: "bold", fontSize: "16px" }}>
+                                    {text}
+                                </Button>
                             </NavLink>
                         ))}
                     </List>
 
                     <Box sx={{ display: "flex" }}>
-                        {/* Right-Side Buttons (Move to Right when Middle Links are Hidden) */}
+                        {/* Right-Side Buttons */}
                         <List sx={{
-                            display: { xs: "none", md: "flex" },
+                            display: { end: "none", xs: "none", md: "none", lg: "flex" },
+                            alignItems: "center",
                             gap: 2,
-                            flexGrow: { xs: 1, md: 0 }, // Make it take space when links are hidden
-                            justifyContent: { xs: "center", md: "flex-end" } // Center on small, right on larger screens
+                            flexGrow: { xs: 1, md: 0 },
+                            justifyContent: { xs: "center", md: "flex-end" }
                         }}>
-                            <NavLink to="/register" style={{ textDecoration: "none" }}>
-                                <Button sx={{ text: "white", ":hover": { bgcolor: "#9ca3af" } }}>Sign In</Button>
-                            </NavLink>
-                            <NavLink to={!isAuthenicated ? ("/login") : null} style={{ textDecoration: "none" }}>
-                                {isAuthenicated ? (
-                                    <Button
-                                        onClick={logout}
-                                        sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>logout</Button>
-                                ) : (<Button sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>login</Button>)}
-                            </NavLink>
+                            {isAuthenticated ? (
+                                profile?.role === "admin" ? (
+                                    <NavLink to="/dashboard" style={{ textDecoration: "none" }}>
+                                        <Button sx={{ color: "black", bgcolor: "#9ca3af", ":hover": { bgcolor: "#96a2b6c4" } }}>Dashboard</Button>
+                                    </NavLink>
+                                ) : null
+                            ) : (
+                                <NavLink to="/register" style={{ textDecoration: "none" }}>
+                                    <Button sx={{ ":hover": { bgcolor: "#9ca3af" } }}>SignUp</Button>
+                                </NavLink>
+                            )}
+
+                            {/* Profile Image with Dropdown */}
+                            {isAuthenticated ? (
+                                <>
+                                    <img
+                                        src={profile?.avatar || "/default-avatar.png"}
+                                        alt="Author"
+                                        className="w-12 h-12 rounded-full bg-gray-300 cursor-pointer"
+                                        onClick={handleProfileClick}
+                                    />
+                                    <Menu
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleClose}
+                                        anchorOrigin={{
+                                            vertical: "bottom",
+                                            horizontal: "right",
+                                        }}
+                                        transformOrigin={{
+                                            vertical: "top",
+                                            horizontal: "right",
+                                        }}
+                                        sx={{
+                                            "& .MuiPaper-root": {
+                                                borderRadius: "8px",
+                                                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                                                minWidth: "180px",
+                                                padding: "8px 0",
+                                            },
+                                        }}
+                                    >
+                                        <MenuItem onClick={() => { handleClose(); Navigate(); }} sx={{ fontSize: "14px", fontWeight: "500", padding: "10px 20px", display: "flex", gap: "8px", "&:hover": { backgroundColor: "#f5f5f5" } }}>
+                                            <FaUserCircle /> Profile
+                                        </MenuItem>
+
+                                        <MenuItem onClick={handleClose} sx={{ fontSize: "14px", fontWeight: "500", padding: "10px 20px", display: "flex", gap: "8px", "&:hover": { backgroundColor: "#f5f5f5" } }}>
+                                            <MdSettings /> Settings
+                                        </MenuItem>
+
+                                        <MenuItem onClick={() => { handleClose(); logout(); }} sx={{ fontSize: "14px", fontWeight: "500", padding: "10px 20px", color: "red", display: "flex", gap: "8px", "&:hover": { backgroundColor: "#ffebeb" } }}>
+                                            <FiLogOut /> Logout
+                                        </MenuItem>
+                                    </Menu>
+                                </>
+                            ) : (
+                                <NavLink to="/login" style={{ textDecoration: "none" }}>
+                                    <Button sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>
+                                </NavLink>
+                            )}
                         </List>
 
-                        {/* Hamburger Icon (Appears on Small Screens) */}
+                        {/* Hamburger Icon */}
                         <IconButton sx={{ display: { sm: "flex", md: "flex", lg: "none" } }} onClick={() => setIsOpen(true)}>
                             <MenuIcon fontSize="large" />
                         </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
-
-            {/* Sidebar Drawer (Opens from Right) */}
             <Drawer anchor="right" open={isOpen} onClose={() => setIsOpen(false)}>
                 <List sx={{ width: 250, display: "flex", flexDirection: "column", height: "100vh" }}>
 
@@ -98,15 +174,76 @@ export default function Navbar() {
 
                     {/* Sidebar Buttons (Visible only when hidden in Navbar) */}
                     <ListItem sx={{ justifyContent: "center", mt: 2 }}>
-                        <NavLink to="/register" style={{ textDecoration: "none", width: "80%" }} onClick={() => setIsOpen(false)}>
-                            <Button fullWidth sx={{ bgcolor: "#9ca3af", borderRadius: "50px", color: "black", ":hover": { bgcolor: "#9ca3af" } }}>Sign In</Button>
-                        </NavLink>
+                        {isAuthenticated ? (
+                            isAdmin ? (
+                                <NavLink to="/dashboard" style={{ textDecoration: "none", width: "80%" }}>
+                                    <Button
+                                        fullWidth
+                                        sx={{
+                                            color: "black",
+                                            bgcolor: "#9ca3af",
+                                            fontWeight: "bold",
+                                            borderRadius: "50px",
+                                            ":hover": { bgcolor: "#96a2b6c4" },
+                                        }}
+                                    >
+                                        Dashboard
+                                    </Button>
+                                </NavLink>
+                            ) : null
+                        ) : (
+                            <NavLink to="/register" style={{ textDecoration: "none", width: "80%" }}>
+                                <Button
+                                    fullWidth
+                                    sx={{
+                                        bgcolor: "#9ca3af",
+                                        color: "black",
+                                        fontWeight: "bold",
+                                        borderRadius: "50px",
+                                        ":hover": { bgcolor: "#96a2b6c4" },
+                                    }}
+                                >
+                                    Sign Up
+                                </Button>
+                            </NavLink>
+                        )}
                     </ListItem>
+
                     <ListItem sx={{ justifyContent: "center" }}>
-                        <NavLink to="/login" style={{ textDecoration: "none", width: "80%" }} onClick={() => setIsOpen(false)}>
-                            {isAuthenicated ? (<Button fullWidth sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>) : (<Button fullWidth sx={{ bgcolor: "black", color: "white", borderRadius: "50px", ":hover": { bgcolor: "black" }, px: "15px" }}>Login</Button>)}
-                        </NavLink>
+                        {isAuthenticated ? (
+                            <NavLink style={{ textDecoration: "none", width: "80%" }} onClick={() => setIsOpen(false)}>
+                                <Button
+                                    onClick={logout}
+                                    fullWidth
+                                    sx={{
+                                        color: "white",
+                                        bgcolor: "black",
+                                        fontWeight: "bold",
+                                        borderRadius: "50px",
+                                        ":hover": { bgcolor: "" },
+                                    }}
+                                >
+                                    Logout
+                                </Button>
+                            </NavLink>
+                        ) : (
+                            <NavLink to="/login" style={{ textDecoration: "none", width: "80%" }}>
+                                <Button
+                                    fullWidth
+                                    sx={{
+                                        bgcolor: "black",
+                                        color: "white",
+                                        fontWeight: "bold",
+                                        borderRadius: "50px",
+                                        ":hover": { bgcolor: "#333" },
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                            </NavLink>
+                        )}
                     </ListItem>
+
                 </List>
             </Drawer>
         </ThemeProvider >

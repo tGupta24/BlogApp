@@ -5,6 +5,7 @@ import {
     deleteBlog,
     getallBlogs,
     getSingleBlog,
+
     updateBlog
 } from "../controller/blog.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
@@ -22,7 +23,8 @@ router.route("/delete-blog/:id").delete(verifyJWT, userVerification("admin"), de
 router.route("/update-blog/:id").put(verifyJWT, userVerification("admin"), updateBlog) // update
 // if send formdata from postman use middleware upload.none()
 
-router.route("/getsingleBlog/:id").put(verifyJWT, getSingleBlog);
+router.route("/getsingleBlog/:id").get(verifyJWT, getSingleBlog);
+// router.route("/like-blog/:id").put(verifyJWT, likeBlog);
 
 
 
