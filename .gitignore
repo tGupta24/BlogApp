@@ -54,3 +54,5 @@ yarn.lock
 # Miscellaneous
 *.tgz
 *.zip
+
+notes.md
