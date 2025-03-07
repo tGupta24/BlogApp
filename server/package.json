@@ -4,9 +4,11 @@
   "description": "This is full stack blog app ",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
-  },
+ "scripts": {
+  "start": "node src/index.js", 
+  "dev": "node src/index.js"
+},
+
   "keywords": [
     "blog",
     "app"
