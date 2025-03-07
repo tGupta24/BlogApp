@@ -25,9 +25,11 @@
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.2.0",
+    "react-slick": "^0.30.3",
     "react-toastify": "^11.0.3",
     "recharts": "^2.15.1",
     "shadcn-ui": "^0.9.4",
+    "slick-carousel": "^1.8.1",
     "tailwind-scrollbar": "^4.0.1",
     "tailwindcss": "^4.0.7"
   },
