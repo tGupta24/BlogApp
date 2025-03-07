@@ -22,10 +22,10 @@ app.use(express.static("public")); // it serve the static files from public so t
 
 
 import userRouter from "./routes/user.route.js"
-app.use("/api/v1/users", userRouter)
+app.use("/users", userRouter)
 
 import blogrouter from "./routes/blog.route.js"
-app.use("/api/v1/blog", blogrouter)
+app.use("/blog", blogrouter)
 
 
 

@@ -142,9 +142,11 @@ const logout = asyncHandler(async (req, res) => {
     )
 
     const options = {
-        httpOnly: false,
-        secure: true
-    }
+        httpOnly: true,
+        secure: true,  // Use true if deployed with HTTPS, false for local development
+        sameSite: "None"  // Must be "None" for cross-origin cookies
+    };
+
 
     return res
         .status(201)
