@@ -10,9 +10,6 @@ export default function Home() {
             <Hero />
             <Trending />
             <PopularCreater />
-
-
-
         </div>
     )
 }

@@ -1,25 +1,31 @@
 import React from 'react'
 import { Navbar, Footer } from './components/index.js'
-
 import { Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from './contextApi/AuthProvider'
 import { useEffect } from 'react'
 
 function App() {
-  const location = useLocation();
-  /// ye jis bhi url pe he uski info deta hai let we are at https://localhost:2582/about then location.pathname = "/about" and much more 
-  const hideNavFooter = ["/login", "/register"].includes(location.pathname); //true or false
-  const isDashboard = location.pathname.startsWith("/dashboard");
+  const location = useLocation()
+  const hideNavFooter = ["/login", "/register"].includes(location.pathname)
+  const isDashboard = location.pathname.startsWith("/dashboard")
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
+  if (hideNavFooter || isDashboard) {
+    // For pages where you want no Navbar or Footer, render Outlet alone
+    return <Outlet />
+  }
 
   return (
-    <>
-      {!hideNavFooter && !isDashboard && <Navbar />}
-      <Outlet />
-      {!hideNavFooter && !isDashboard && <Footer />}
-    </>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      {/* This will make Outlet take available space and push footer down */}
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   )
 }
 

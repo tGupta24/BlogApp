@@ -7,7 +7,7 @@ export default function Footer() {
             <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 text-center md:text-left">
 
                 {/* Left Section - Website Name */}
-                <h2 className="text-lg font-bold mb-4 md:mb-0">My Website</h2>
+                <h2 className="text-lg font-bold mb-4 md:mb-0">Blogger</h2>
 
                 {/* Center Section - Navigation Links */}
                 <nav className="flex flex-wrap justify-center md:justify-start gap-4">
