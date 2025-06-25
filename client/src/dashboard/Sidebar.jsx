@@ -73,7 +73,7 @@ const SidebarContent = ({ profile, gotoHome, handleLogout, handleClose }) => {
                 ) : (
                     <FaUserCircle className="text-gray-300 w-24 h-24" />
                 )}
-                <p className="text-xl font-semibold mt-3 text-white tracking-wide">
+                <p className="text-xl font-semibold mt-3 text-black tracking-wide">
                     {profile?.name || "Guest User"}
                 </p>
             </div>
