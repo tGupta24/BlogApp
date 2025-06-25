@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../contextApi/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function UpdateBlog() {
     const { id } = useParams();
     const [blogImagePreview, setBlogImagePreview] = useState("");
+    const { fetchBlogs } = useAuth();
     const [loader, setLoader] = useState(false);
+    const navigate = useNavigate();
 
     const {
         register,
@@ -38,8 +42,9 @@ function UpdateBlog() {
                 toast.error("Error fetching blog details");
             }
         };
-
         fetchBlog();
+
+
     }, [id, setValue]);
 
     const onSubmit = async (data) => {
@@ -61,6 +66,8 @@ function UpdateBlog() {
 
             toast.success(response.data.message || "Blog updated successfully");
             setLoader(false);
+            await fetchBlogs()
+            navigate("/dashboard/my-blogs")
         } catch (error) {
             setLoader(false);
             toast.error(error.response?.data?.message || "Error updating blog");

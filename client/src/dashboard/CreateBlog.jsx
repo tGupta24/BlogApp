@@ -1,23 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../contextApi/AuthProvider";
+import { useNavigate } from "react-router-dom";  // Step 1: import
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function CreateBlog() {
     const [blogImagePreview, setBlogImagePreview] = useState("");
-    const { isAuthenticated, setIsAuthenticated } = useAuth();
+    const { fetchBlogs } = useAuth(); // ✅ Get fetchBlogs from context
     const [loader, setLoader] = useState(false);
+    const navigate = useNavigate();
 
     const {
         register,
         handleSubmit,
         reset,
-        watch, // use for constantly watching the input field
-
+        watch,
     } = useForm();
 
     const onSubmit = async (data) => {
@@ -40,32 +40,38 @@ function CreateBlog() {
             );
 
             toast.success(response.data.message || "Blog created successfully");
-            reset(); // Reset form after submission
-            setBlogImagePreview(""); // Clear image preview
-            setLoader(false);
 
+            await fetchBlogs();
+            navigate("/dashboard/my-blogs")// ✅ Refresh global blog state
+
+            reset();
+            setBlogImagePreview("");
         } catch (error) {
-            setLoader(false);
             toast.error(error.response?.data?.message || "Error creating blog");
+        } finally {
+            setLoader(false);
         }
     };
 
-    // Watch the file input to preview image
+    // Watch for image change to preview
     const blogImage = watch("blogImage");
-    if (blogImage && blogImage.length > 0) {
-        const file = blogImage[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => setBlogImagePreview(reader.result);
-    }
+    useEffect(() => {
+        if (blogImage && blogImage.length > 0) {
+            const file = blogImage[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => setBlogImagePreview(reader.result);
+        }
+    }, [blogImage]);
 
     return (
         <>
-
             <Toaster />
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-                    <h3 className="text-xl font-semibold text-center text-gray-700 mb-4">📝 Create a Blog</h3>
+                    <h3 className="text-xl font-semibold text-center text-gray-700 mb-4">
+                        📝 Create a Blog
+                    </h3>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         {/* Category */}
@@ -75,26 +81,13 @@ function CreateBlog() {
                         >
                             <option value="">Select Category</option>
                             {[
-                                "Devotion",
-                                "Sports",
-                                "Coding",
-                                "Entertainment",
-                                "Business",
-                                "Health",
-                                "Education",
-                                "Science",
-                                "Technology",
-                                "Travel",
-                                "Food",
-                                "Fashion",
+                                "Devotion", "Sports", "Coding", "Entertainment", "Business",
+                                "Health", "Education", "Science", "Technology", "Travel",
+                                "Food", "Fashion",
                             ].map((category) => (
-                                <option key={category} value={category}>
-                                    {category}
-                                </option>
+                                <option key={category} value={category}>{category}</option>
                             ))}
                         </select>
-
-
 
                         {/* Title */}
                         <input
@@ -103,7 +96,6 @@ function CreateBlog() {
                             {...register("title", { required: "Title is required" })}
                             className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 outline-none"
                         />
-
 
                         {/* Image Preview */}
                         {blogImagePreview && (
@@ -124,25 +116,19 @@ function CreateBlog() {
                             accept="image/*"
                         />
 
-
                         {/* About */}
                         <textarea
                             rows="8"
                             placeholder="Write something about your blog"
                             {...register("content", { required: "About section is required" })}
-                            className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 outline-none resize-none overflow-y-auto scrollbar-none"
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 outline-none resize-none"
                         />
 
-
-
-
-
                         {/* Submit Button */}
-
                         <button
                             type="submit"
                             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200 flex items-center justify-center"
-                            disabled={loader} // Disable button when loading
+                            disabled={loader}
                         >
                             {loader ? (
                                 <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
@@ -151,7 +137,6 @@ function CreateBlog() {
                                 </svg>
                             ) : "Post Blog"}
                         </button>
-
                     </form>
                 </div>
             </div>

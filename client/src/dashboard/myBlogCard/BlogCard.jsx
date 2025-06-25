@@ -6,7 +6,6 @@ import { FaHeart } from "react-icons/fa";
 const BlogCard = ({ blog, onDelete, onUpdate }) => {
     const {
         blogImage,
-        toForImg,
         category,
         likeCount,
         authorImg,
@@ -19,7 +18,7 @@ const BlogCard = ({ blog, onDelete, onUpdate }) => {
         <div className="rounded-lg m-2 max-w-sm shadow-lg bg-white hover:scale-105 transition-transform duration-300">
             {/* Image Section */}
             <div className="relative group">
-                <Link to={toForImg}>
+                <Link to={`/singleBlog/${blog._id}`}>
                     <img
                         src={blogImage || "/cardimg.jpg"}
                         alt="Card Image"
