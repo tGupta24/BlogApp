@@ -30,7 +30,7 @@ export default function Blog() {
             </div>
 
             {/* Blog Cards Section */}
-            <div className="mt-6 p-5">
+            <div className="mt-6 p-5 min-h-screen">
                 <div className="grid grid-cols-1 gap-4 w-full sm:w-[75%]">
                     {displayedBlogs.length > 0 ? (
                         displayedBlogs.map((blog) => (
