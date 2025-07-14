@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      {/* This will make Outlet take available space and push footer down */}
+
       <main className="flex-grow">
         <Outlet />
       </main>
